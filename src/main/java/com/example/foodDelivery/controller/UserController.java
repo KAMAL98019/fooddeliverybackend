@@ -1,11 +1,10 @@
 package com.example.foodDelivery.controller;
 
 import com.example.foodDelivery.entity.User;
+import com.example.foodDelivery.response.ApiResponse;
 import com.example.foodDelivery.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,29 +18,36 @@ public class UserController {
 
     // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User registeredUser = userService.registerUser(user);
+    public ResponseEntity<ApiResponse> registerUser(@RequestBody User user) {
+        System.out.println("register"+user);
+        ApiResponse registeredUser = userService.registerUser(user);
         return ResponseEntity.ok(registeredUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> loginUser(@RequestBody LoginRequest loginRequest) {
+        ApiResponse response = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
+        return ResponseEntity.ok(response);
     }
 
     // Get all users
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<ApiResponse> getAllUsers() {
+        ApiResponse users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     // Get a user by ID
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
+    public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
+        ApiResponse user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     // Delete a user by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
-        userService.deleteUserById(id);
-        return ResponseEntity.ok("User deleted successfully");
+    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Long id) {
+        ApiResponse response = userService.deleteUserById(id);
+        return ResponseEntity.ok(response);
     }
 }
